@@ -70,3 +70,30 @@ def get_feature_columns(df: pd.DataFrame) -> list:
     features = [c for c in RAW_FEATURES if c in df.columns]
     features += [c for c in engineered if c in df.columns]
     return features
+
+
+
+
+
+#prepare data for modeling
+def prepare_data(df: pd.DataFrame, test_size: float = 0.2):
+    
+    df = clean_data(df)
+    df = add_time_features(df)
+
+    feature_names = get_feature_columns(df)
+    X = df[feature_names].values
+    y = df[TARGET].values
+
+    # Chronological split (no shuffling)
+    split_idx = int(len(X) * (1 - test_size))
+    X_train, X_test = X[:split_idx], X[split_idx:]
+    y_train, y_test = y[:split_idx], y[split_idx:]
+
+    # Scale
+    scaler = StandardScaler()
+    X_train = scaler.fit_transform(X_train)
+    X_test = scaler.transform(X_test)
+
+    return X_train, X_test, y_train, y_test, scaler, feature_names
+
