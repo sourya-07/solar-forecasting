@@ -54,3 +54,4 @@ def plot_seasonal_pattern(df: pd.DataFrame):
     )
     fig.update_layout(template="plotly_white")
     return fig
+
