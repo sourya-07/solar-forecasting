@@ -55,3 +55,66 @@ def plot_seasonal_pattern(df: pd.DataFrame):
     fig.update_layout(template="plotly_white")
     return fig
 
+
+
+
+
+#Feature Importance
+
+def plot_feature_importance(importances, feature_names):
+    """Horizontal bar chart of feature importances (e.g. from Random Forest)."""
+    sorted_idx = np.argsort(importances)
+    fig = go.Figure(
+        go.Bar(
+            x=importances[sorted_idx],
+            y=np.array(feature_names)[sorted_idx],
+            orientation="h",
+            marker_color="#636EFA",
+        )
+    )
+    fig.update_layout(
+        title="Feature Importance (Random Forest)",
+        xaxis_title="Importance",
+        yaxis_title="Feature",
+        template="plotly_white",
+        height=max(400, len(feature_names) * 25),
+    )
+    return fig
+
+
+# Correlation Heatmap
+
+def plot_correlation_heatmap(df: pd.DataFrame):
+    """Heatmap of Pearson correlations among numeric columns."""
+    numeric_df = df.select_dtypes(include="number")
+    corr = numeric_df.corr()
+
+    fig = go.Figure(
+        go.Heatmap(
+            z=corr.values,
+            x=corr.columns.tolist(),
+            y=corr.columns.tolist(),
+            colorscale="RdBu_r",
+            zmin=-1,
+            zmax=1,
+            text=np.round(corr.values, 2),
+            texttemplate="%{text}",
+        )
+    )
+    fig.update_layout(
+        title="Feature Correlation Heatmap",
+        template="plotly_white",
+        height=700,
+        width=800,
+    )
+    return fig
+
+
+#Helpers 
+
+def _empty_figure(message: str):
+    """Return a blank figure with a centred message."""
+    fig = go.Figure()
+    fig.add_annotation(text=message, showarrow=False, font=dict(size=16))
+    fig.update_layout(template="plotly_white")
+    return fig
