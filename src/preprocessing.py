@@ -31,7 +31,6 @@ RAW_FEATURES = [
     "azimuth",
 ]
 
-
 def clean_data(df: pd.DataFrame) -> pd.DataFrame:
 
     # Basic cleaning:
